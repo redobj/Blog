@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.redobj.blog.bean.Article;
 import top.redobj.blog.bean.Msg;
 import top.redobj.blog.service.ArticleService;
+import top.redobj.blog.util.Utils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -33,7 +35,7 @@ public class ArticleController {
 
     @ResponseBody
     @RequestMapping("/api/article/{id}")
-    public Msg articleByPrimarykey(@PathVariable("id")int id){
+    public Msg articleByPrimarykey(@PathVariable("id")int id ){
         Article article = service.ArticleById(id);
         return article == null ?Msg.fail():Msg.success().add("article",article);
     }
@@ -53,8 +55,14 @@ public class ArticleController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/api/article/{id}",method = RequestMethod.POST)
-    public void articleAdd(Article article){
+    @RequestMapping(value = "/api/article",method = RequestMethod.POST)
+    public void articleAdd(Article article, HttpServletRequest request){
+        try {
+            article.setArticleIp(Utils.getIpAddr(request));
+            article.setArticleContent(Utils.articleChangeHelper(Utils.CHANGE_MODE.READ,article.getArticleContent()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         service.articleAdd(article);
     }
 
