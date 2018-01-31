@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.redobj.blog.dao.UserMapper">
+  <resultMap id="BaseResultMap" type="top.redobj.blog.bean.User">
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <!--<result column="user_pwd" jdbcType="VARCHAR" property="userPwd" />-->
+    <result column="user_realname" jdbcType="CHAR" property="userRealname" />
+    <result column="user_sex" jdbcType="BIT" property="userSex" />
+    <result column="user_phone" jdbcType="BIGINT" property="userPhone" />
+    <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
+    <result column="user_address" jdbcType="VARCHAR" property="userAddress" />
+    <result column="user_birthday" jdbcType="BIGINT" property="userBirthday" />
+    <result column="user_description" jdbcType="VARCHAR" property="userDescription" />
+    <result column="user_image_url" jdbcType="VARCHAR" property="userImageUrl" />
+    <result column="user_school" jdbcType="VARCHAR" property="userSchool" />
+    <result column="user_last_login_ip" jdbcType="VARCHAR" property="userLastLoginIp" />
+    <result column="user_last_update_time" jdbcType="BIGINT" property="userLastUpdateTime" />
+    <!--<result column="user_token" jdbcType="CHAR" property="userToken" />-->
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <!--user_pwd,, user_token-->
+  <sql id="Base_Column_List">
+    user_id, user_name, user_realname, user_sex, user_phone, user_email, user_address,
+    user_birthday, user_description, user_image_url, user_school, user_last_login_ip, 
+    user_last_update_time
+  </sql>
+
+  <select id="selectByExample" parameterType="top.redobj.blog.bean.UserExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="top.redobj.blog.bean.UserExample">
+    delete from user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="top.redobj.blog.bean.User">
+    insert into user (user_id, user_name, user_pwd, 
+      user_realname, user_sex, user_phone, 
+      user_email, user_address, user_birthday, 
+      user_description, user_image_url, user_school, 
+      user_last_login_ip, user_last_update_time, user_token
+      )
+    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userPwd,jdbcType=VARCHAR}, 
+      #{userRealname,jdbcType=CHAR}, #{userSex,jdbcType=BIT}, #{userPhone,jdbcType=BIGINT}, 
+      #{userEmail,jdbcType=VARCHAR}, #{userAddress,jdbcType=VARCHAR}, #{userBirthday,jdbcType=BIGINT}, 
+      #{userDescription,jdbcType=VARCHAR}, #{userImageUrl,jdbcType=VARCHAR}, #{userSchool,jdbcType=VARCHAR}, 
+      #{userLastLoginIp,jdbcType=VARCHAR}, #{userLastUpdateTime,jdbcType=BIGINT}, #{userToken,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="top.redobj.blog.bean.User">
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="userPwd != null">
+        user_pwd,
+      </if>
+      <if test="userRealname != null">
+        user_realname,
+      </if>
+      <if test="userSex != null">
+        user_sex,
+      </if>
+      <if test="userPhone != null">
+        user_phone,
+      </if>
+      <if test="userEmail != null">
+        user_email,
+      </if>
+      <if test="userAddress != null">
+        user_address,
+      </if>
+      <if test="userBirthday != null">
+        user_birthday,
+      </if>
+      <if test="userDescription != null">
+        user_description,
+      </if>
+      <if test="userImageUrl != null">
+        user_image_url,
+      </if>
+      <if test="userSchool != null">
+        user_school,
+      </if>
+      <if test="userLastLoginIp != null">
+        user_last_login_ip,
+      </if>
+      <if test="userLastUpdateTime != null">
+        user_last_update_time,
+      </if>
+      <if test="userToken != null">
+        user_token,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPwd != null">
+        #{userPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="userRealname != null">
+        #{userRealname,jdbcType=CHAR},
+      </if>
+      <if test="userSex != null">
+        #{userSex,jdbcType=BIT},
+      </if>
+      <if test="userPhone != null">
+        #{userPhone,jdbcType=BIGINT},
+      </if>
+      <if test="userEmail != null">
+        #{userEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="userAddress != null">
+        #{userAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="userBirthday != null">
+        #{userBirthday,jdbcType=BIGINT},
+      </if>
+      <if test="userDescription != null">
+        #{userDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="userImageUrl != null">
+        #{userImageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="userSchool != null">
+        #{userSchool,jdbcType=VARCHAR},
+      </if>
+      <if test="userLastLoginIp != null">
+        #{userLastLoginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="userLastUpdateTime != null">
+        #{userLastUpdateTime,jdbcType=BIGINT},
+      </if>
+      <if test="userToken != null">
+        #{userToken,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="top.redobj.blog.bean.UserExample" resultType="java.lang.Long">
+    select count(*) from user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update user
+    <set>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userName != null">
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userPwd != null">
+        user_pwd = #{record.userPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userRealname != null">
+        user_realname = #{record.userRealname,jdbcType=CHAR},
+      </if>
+      <if test="record.userSex != null">
+        user_sex = #{record.userSex,jdbcType=BIT},
+      </if>
+      <if test="record.userPhone != null">
+        user_phone = #{record.userPhone,jdbcType=BIGINT},
+      </if>
+      <if test="record.userEmail != null">
+        user_email = #{record.userEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userAddress != null">
+        user_address = #{record.userAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userBirthday != null">
+        user_birthday = #{record.userBirthday,jdbcType=BIGINT},
+      </if>
+      <if test="record.userDescription != null">
+        user_description = #{record.userDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userImageUrl != null">
+        user_image_url = #{record.userImageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userSchool != null">
+        user_school = #{record.userSchool,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userLastLoginIp != null">
+        user_last_login_ip = #{record.userLastLoginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userLastUpdateTime != null">
+        user_last_update_time = #{record.userLastUpdateTime,jdbcType=BIGINT},
+      </if>
+      <if test="record.userToken != null">
+        user_token = #{record.userToken,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update user
+    set user_id = #{record.userId,jdbcType=INTEGER},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      user_pwd = #{record.userPwd,jdbcType=VARCHAR},
+      user_realname = #{record.userRealname,jdbcType=CHAR},
+      user_sex = #{record.userSex,jdbcType=BIT},
+      user_phone = #{record.userPhone,jdbcType=BIGINT},
+      user_email = #{record.userEmail,jdbcType=VARCHAR},
+      user_address = #{record.userAddress,jdbcType=VARCHAR},
+      user_birthday = #{record.userBirthday,jdbcType=BIGINT},
+      user_description = #{record.userDescription,jdbcType=VARCHAR},
+      user_image_url = #{record.userImageUrl,jdbcType=VARCHAR},
+      user_school = #{record.userSchool,jdbcType=VARCHAR},
+      user_last_login_ip = #{record.userLastLoginIp,jdbcType=VARCHAR},
+      user_last_update_time = #{record.userLastUpdateTime,jdbcType=BIGINT},
+      user_token = #{record.userToken,jdbcType=CHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="top.redobj.blog.bean.User">
+    update user
+    <set>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPwd != null">
+        user_pwd = #{userPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="userRealname != null">
+        user_realname = #{userRealname,jdbcType=CHAR},
+      </if>
+      <if test="userSex != null">
+        user_sex = #{userSex,jdbcType=BIT},
+      </if>
+      <if test="userPhone != null">
+        user_phone = #{userPhone,jdbcType=BIGINT},
+      </if>
+      <if test="userEmail != null">
+        user_email = #{userEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="userAddress != null">
+        user_address = #{userAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="userBirthday != null">
+        user_birthday = #{userBirthday,jdbcType=BIGINT},
+      </if>
+      <if test="userDescription != null">
+        user_description = #{userDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="userImageUrl != null">
+        user_image_url = #{userImageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="userSchool != null">
+        user_school = #{userSchool,jdbcType=VARCHAR},
+      </if>
+      <if test="userLastLoginIp != null">
+        user_last_login_ip = #{userLastLoginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="userLastUpdateTime != null">
+        user_last_update_time = #{userLastUpdateTime,jdbcType=BIGINT},
+      </if>
+      <if test="userToken != null">
+        user_token = #{userToken,jdbcType=CHAR},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="top.redobj.blog.bean.User">
+    update user
+    set user_name = #{userName,jdbcType=VARCHAR},
+      user_pwd = #{userPwd,jdbcType=VARCHAR},
+      user_realname = #{userRealname,jdbcType=CHAR},
+      user_sex = #{userSex,jdbcType=BIT},
+      user_phone = #{userPhone,jdbcType=BIGINT},
+      user_email = #{userEmail,jdbcType=VARCHAR},
+      user_address = #{userAddress,jdbcType=VARCHAR},
+      user_birthday = #{userBirthday,jdbcType=BIGINT},
+      user_description = #{userDescription,jdbcType=VARCHAR},
+      user_image_url = #{userImageUrl,jdbcType=VARCHAR},
+      user_school = #{userSchool,jdbcType=VARCHAR},
+      user_last_login_ip = #{userLastLoginIp,jdbcType=VARCHAR},
+      user_last_update_time = #{userLastUpdateTime,jdbcType=BIGINT},
+      user_token = #{userToken,jdbcType=CHAR}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+</mapper>
