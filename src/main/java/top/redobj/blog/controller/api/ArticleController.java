@@ -1,11 +1,10 @@
 package top.redobj.blog.controller.api;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import top.redobj.blog.bean.Article;
 import top.redobj.blog.bean.Msg;
 import top.redobj.blog.service.ArticleService;
@@ -20,17 +19,21 @@ public class ArticleController {
     ArticleService service;
 
     @ResponseBody
-    @RequestMapping("/api/articles/articles")
-    public Msg allArticleSimple(){
+    @RequestMapping("/api/articles/articles/{pn}")
+    public Msg allArticleSimple(@PathVariable("pn") int pn , @RequestParam(value = "row",defaultValue = "5")int row){
+        PageHelper.startPage(pn,row);
         List<Article> articles = service.allArticleSimple();
-        return articles == null?Msg.fail():Msg.success().add("articles",articles);
+        PageInfo<Article> page = new PageInfo<Article>(articles);
+        return articles == null?Msg.fail():Msg.success().add("pageInfo",page);
     }
 
     @ResponseBody
-    @RequestMapping("/api/articles/{classifyId}")
-    public Msg articleSimpleByClassify(@PathVariable("classifyId")int classifyId){
+    @RequestMapping("/api/articles/{classifyId}/{pn}")
+    public Msg articleSimpleByClassify(@PathVariable("classifyId")int classifyId, @PathVariable("pn") int pn , @RequestParam(value = "row",defaultValue = "5")int row){
+        PageHelper.startPage(pn,row);
         List<Article> articles = service.allArticleSimpleByClassify(classifyId);
-        return articles == null?Msg.fail():Msg.success().add("articles",articles);
+        PageInfo<Article> page = new PageInfo<Article>(articles);
+        return articles == null?Msg.fail():Msg.success().add("pageInfo",page);
     }
 
     @ResponseBody
@@ -65,6 +68,21 @@ public class ArticleController {
         }
         service.articleAdd(article);
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/api/articles/search")
+    public Msg articleSearch(String articleName,@RequestParam(value = "pn",defaultValue = "1") int pn,@RequestParam(value = "row",defaultValue = "10") int row){
+        PageHelper.startPage(pn,row);
+        List<Article> articles = service.searchArticle(articleName);
+        PageInfo<Article> pageinfo = new PageInfo<>(articles);
+        if (articles == null || articles.size() <= 0){
+            return Msg.fail();
+        }
+        else{
+            return Msg.success().add("pageInfo",pageinfo);
+        }
+    }
+
 
 
 }

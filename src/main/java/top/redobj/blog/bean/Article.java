@@ -1,6 +1,7 @@
 package top.redobj.blog.bean;
 
 import top.redobj.blog.constants.Constants;
+import top.redobj.blog.util.Utils;
 
 public class Article {
     private Integer articleId;
@@ -110,8 +111,7 @@ public class Article {
             this.articleContent = null;
             setContentSplit(null);
         }else{
-//            this.articleContent = articleContent.trim();
-            this.articleContent = articleContent.trim().replace(Constants.SYMBOL_T,"&nbsp;&nbsp;&nbsp;&nbsp;");
+            this.articleContent = Utils.articleChangeHelper(Utils.CHANGE_MODE.WRITE,articleContent);
             setContentSplit(this.articleContent.split(Constants.SYMBOL_BR));
         }
 

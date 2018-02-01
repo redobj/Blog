@@ -17,4 +17,6 @@ public interface ArticleService {
     void onclick(int id);
 
     void articleAdd(Article article);
+
+    List<Article> searchArticle(String articleName);
 }

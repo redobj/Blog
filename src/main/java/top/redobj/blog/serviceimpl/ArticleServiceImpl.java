@@ -2,6 +2,7 @@ package top.redobj.blog.serviceimpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import top.redobj.blog.bean.Article;
 import top.redobj.blog.bean.ArticleExample;
 import top.redobj.blog.dao.ArticleMapper;
@@ -19,9 +20,9 @@ public class ArticleServiceImpl implements ArticleService {
         example.setOrderByClause("article_time desc");
         List<Article> articles = articleMapper.selectByExampleWithClassify(example);
 
-        if(articles != null && articles.size() > 0 ){
+        if (articles != null && articles.size() > 0) {
             return articles;
-        }else {
+        } else {
             return null;
         }
     }
@@ -31,9 +32,9 @@ public class ArticleServiceImpl implements ArticleService {
         example.setOrderByClause("article_time desc");
         example.createCriteria().andArticleClassifyIdEqualTo(classifyId);
         List<Article> articles = articleMapper.selectByExampleWithClassify(example);
-        if(articles != null && articles.size() > 0 ){
+        if (articles != null && articles.size() > 0) {
             return articles;
-        }else {
+        } else {
             return null;
         }
     }
@@ -44,9 +45,9 @@ public class ArticleServiceImpl implements ArticleService {
         example.createCriteria().andArticleUpEqualTo(true);
         example.setLimit(num);
         List<Article> articles = articleMapper.selectByExampleWithClassify(example);
-        if(articles != null && articles.size() > 0 ){
+        if (articles != null && articles.size() > 0) {
             return articles;
-        }else {
+        } else {
             return null;
         }
     }
@@ -61,5 +62,13 @@ public class ArticleServiceImpl implements ArticleService {
 
     public void articleAdd(Article article) {
         articleMapper.insertSelective(article);
+    }
+
+    @Override
+    public List<Article> searchArticle(String articleName) {
+        ArticleExample example = new ArticleExample();
+        example.setOrderByClause("article_time desc");
+        example.createCriteria().andArticleTitleLike("%" + articleName + "%");
+        return articleMapper.selectByExampleWithClassify(example);
     }
 }

@@ -1,6 +1,9 @@
 package top.redobj.blog.config;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInterceptor;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import org.apache.ibatis.plugin.Interceptor;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +15,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 
 import java.beans.PropertyVetoException;
 import java.io.IOException;
+import java.util.Properties;
 
 @Configuration
 @MapperScan("top.redobj.blog.dao")
@@ -43,6 +47,15 @@ public class DataSourceConfig {
     }
 
     @Bean
+    public PageInterceptor pageInterceptor(){
+        PageInterceptor interceptor = new PageInterceptor();
+        Properties properties = new Properties();
+        properties.setProperty("reasonable","true");
+        interceptor.setProperties(properties);
+        return interceptor;
+    }
+
+    @Bean
     public SqlSessionFactoryBean sqlSessionFactoryBean(){
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
@@ -52,6 +65,8 @@ public class DataSourceConfig {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Interceptor[] plugins =  new Interceptor[]{pageInterceptor()};
+        bean.setPlugins(plugins);
         return bean;
     }
 
